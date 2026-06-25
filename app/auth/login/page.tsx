@@ -64,9 +64,7 @@ export default function LoginPage() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <label className="text-[12px] font-medium text-[var(--ink-2)]">Password</label>
-            <Link href="/auth/reset" className="text-[12px] text-[var(--ink-3)] hover:text-[var(--ink)]">
-              Forgot password?
-            </Link>
+            
           </div>
           <input
             className={inputCls}
@@ -77,6 +75,9 @@ export default function LoginPage() {
             onKeyDown={e => e.key === 'Enter' && submit()}
             autoComplete="current-password"
           />
+          <Link href="/auth/reset" className="text-[12px] text-[var(--ink-3)] hover:text-[var(--ink)]">
+              Forgot password?
+            </Link>
         </div>
       </div>
 
