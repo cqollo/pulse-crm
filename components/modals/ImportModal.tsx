@@ -5,7 +5,7 @@ import { Modal, Btn } from '../shared/Modal'
 import { Upload, Info } from 'lucide-react'
 import type { Contact, Status } from '@/lib/types'
 
-type Row = Omit<Contact, 'id' | 'createdAt' | 'colorIdx'>
+type Row = Omit<Contact, 'id' | 'createdAt' | 'colorIdx'> & { colorIdx: number }
 
 function parseCsv(text: string): Row[] {
   const lines = text.trim().split(/\r?\n/)
@@ -46,7 +46,7 @@ function parseCsv(text: string): Row[] {
       phone: mapCol(obj, 'phone', 'phone_number', 'tel'),
       linkedin: mapCol(obj, 'linkedin', 'linkedin_url'),
       tags: tagsRaw ? tagsRaw.split(/[,;]+/).map(t => t.trim()).filter(Boolean) : [],
-      ownerId: null,
+      ownerId: null, colorIdx: 0,
     }
   }).filter(r => r.fname || r.lname || r.email)
 }
