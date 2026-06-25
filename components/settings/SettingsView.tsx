@@ -118,8 +118,8 @@ function ProfilePanel() {
       <Field label="Full name">
         <input className={inputCls} value={name} onChange={e => setName(e.target.value)} placeholder="Jane Smith" />
       </Field>
-      <Field label="Email address">
-        <input className={inputCls} value={email} readOnly disabled className={cn(inputCls, 'opacity-60 cursor-not-allowed')} />
+      <Field label="Email address">        
+        <input className={cn(inputCls, 'opacity-60 cursor-not-allowed')} value={email} readOnly disabled />
         <p className="text-[11px] text-[var(--ink-3)] mt-1">Email cannot be changed here. Contact support.</p>
       </Field>
 
