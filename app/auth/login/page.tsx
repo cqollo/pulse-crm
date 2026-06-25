@@ -75,7 +75,7 @@ export default function LoginPage() {
             onKeyDown={e => e.key === 'Enter' && submit()}
             autoComplete="current-password"
           />
-          <Link href="/auth/reset" className="text-[12px] text-[var(--ink-3)] hover:text-[var(--ink)]">
+          <Link href="/auth/reset" className="text-[12px] text-[var(--ink-3)] hover:text-[var(--ink)] marker:transition-colors text-right w-full block">
               Forgot password?
             </Link>
         </div>
