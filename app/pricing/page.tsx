@@ -38,7 +38,9 @@ export default function PricingPage() {
   const router = useRouter()
 
   const checkout = async (variantEnv: string, planName: string) => {
-    const variantId = process.env[variantEnv as keyof typeof process.env]
+    const variantId = variantEnv === 'NEXT_PUBLIC_LS_SOLO_VARIANT_ID'
+      ? process.env.NEXT_PUBLIC_LS_SOLO_VARIANT_ID
+      : process.env.NEXT_PUBLIC_LS_TEAM_VARIANT_ID
     if (!variantId) {
       alert('Billing not configured yet. Check back soon!')
       return
