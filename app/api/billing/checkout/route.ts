@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 
 const LS_API = 'https://api.lemonsqueezy.com/v1'
 
@@ -7,11 +6,7 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.LEMONSQUEEZY_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'Billing not configured' }, { status: 500 })
 
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const { variantId } = await req.json()
+  const { variantId, email } = await req.json()
 
   const res = await fetch(`${LS_API}/checkouts`, {
     method: 'POST',
@@ -24,17 +19,14 @@ export async function POST(req: NextRequest) {
       data: {
         type: 'checkouts',
         attributes: {
-          checkout_data: {
-            email: user.email,
-            custom: { user_id: user.id },
-          },
+          checkout_data: { email: email || undefined },
           product_options: {
             redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing/success`,
             receipt_link_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing/success`,
           },
         },
         relationships: {
-          store: { data: { type: 'stores', id: process.env.LEMONSQUEEZY_STORE_ID } },
+          store: { data: { type: 'stores', id: String(process.env.LEMONSQUEEZY_STORE_ID) } },
           variant: { data: { type: 'variants', id: String(variantId) } },
         },
       },
@@ -42,8 +34,10 @@ export async function POST(req: NextRequest) {
   })
 
   const data = await res.json()
+  if (!res.ok) { console.error('LS error:', data); return NextResponse.json({ error: 'Failed to create checkout' }, { status: 500 }) }
+
   const checkoutUrl = data?.data?.attributes?.url
-  if (!checkoutUrl) return NextResponse.json({ error: 'Failed to create checkout' }, { status: 500 })
+  if (!checkoutUrl) return NextResponse.json({ error: 'No checkout URL' }, { status: 500 })
 
   return NextResponse.json({ url: checkoutUrl })
 }
